@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#2A9D8F" />
+    <title>Harmony — Your Caring Companion</title>
+    <!-- PWA: installable to home screen -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Harmony" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+      :root {
+        --bg: #F2F2F7;
+        --card: #FFFFFF;
+        --text: #1C1C1E;
+        --text2: #8E8E93;
+        --text3: #C7C7CC;
+        --sep: #E5E5EA;
+        --teal: #2A9D8F;
+        --teal-soft: #E7F4F2;
+        --blue: #007AFF;
+        --green: #34C759;
+        --green-soft: #E4F7E8;
+        --amber: #FF9500;
+        --amber-soft: #FFF2E0;
+        --red: #FF3B30;
+        --red-soft: #FFE9E7;
+        --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+      }
+      html, body { background: var(--bg); }
+      body {
+        font-family: var(--font);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        -webkit-font-smoothing: antialiased;
+      }
+      #root { width: 100%; max-width: 480px; min-height: 100vh; background: var(--bg); position: relative; }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #000000; --card: #1C1C1E; --text: #FFFFFF; --text2: #8E8E93; --text3: #48484A;
+          --sep: #38383A; --teal-soft: #16302C; --green-soft: #14321C; --amber-soft: #3A2A0E; --red-soft: #3A1512;
+        }
+      }
+      input, button, select { font-family: var(--font); }
+      ::-webkit-scrollbar { width: 0; background: transparent; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
