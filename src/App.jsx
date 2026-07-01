@@ -69,6 +69,7 @@ const STR = {
     dailyCheckin: "Daily check-in", talkedToHarmony: "Talked to Harmony", last7days: "Last 7 days", recentActivity: "Recent activity", noActivity: "No activity yet today", callPrefix: "Call", switchRole: "Switch role", notYet: "Not yet", yesWord: "Yes", takenOf: "taken",
     nothingTitle: "Nothing to show yet", nothingBody: "Tap the gear up top to choose what you'd like to keep an eye on. They also control what they share.",
     backToDashboard: "← Back to dashboard", whatYouWatch: "What you keep an eye on", whatYouWatchSub: "Pick what shows on your dashboard. You'll only ever see what they also choose to share.", watchCheckinsSub: "Check-in status, mood, and the 7-day view", watchMedsSub: "Whether their medications were taken", activityChats: "Activity & chats", watchActivitySub: "Recent activity and conversations", famAlertNote: "If they miss a check-in, you'll get a text alert. We'll finish setting that up together.",
+    familyDashTitle: "Family Dashboard", doneWord: "Done", weeklyTitle: "Weekly summary", generateWord: "Generate", weeklyPlaceholder: "Tap Generate to create an AI summary of how your loved one has been doing this week.", backToHarmony: "← Back to Harmony", familyAccessTitle: "Family Access", familyAccessSub: "For trusted family members", viewDashTitle: "View wellbeing dashboard", viewDashSub: "See check-ins, medications, mood trends, and a weekly summary.", openDashBtn: "Open Dashboard", familyPinNote: "In production this is protected by a family PIN.",
     settings: "Settings", rowVoice: "Voice & API keys", rowMeds: "Medications", rowContacts: "Trusted contacts", rowCheckinTime: "Daily check-in time", rowSwitchRole: "Switch role (senior or family)",
     whatYouShare: "What you share with family", whatYouShareSub: "Family only ever sees what you turn on here. You can change this anytime.", shareCheckinsSub: "Whether you checked in, and your mood", shareMedsSub: "Which medications you've taken", shareActivitySub: "When you talk with Harmony",
     resetAll: "Reset all data", resetConfirm: "Reset Harmony? This clears ALL data.",
@@ -92,6 +93,7 @@ const STR = {
     dailyCheckin: "Registro diario", talkedToHarmony: "Conversó con Harmony", last7days: "Últimos 7 días", recentActivity: "Actividad reciente", noActivity: "Sin actividad por hoy", callPrefix: "Llamar a", switchRole: "Cambiar de perfil", notYet: "Aún no", yesWord: "Sí", takenOf: "tomados",
     nothingTitle: "Nada que mostrar aún", nothingBody: "Toque el engranaje de arriba para elegir qué desea ver. Ellos también controlan lo que comparten.",
     backToDashboard: "← Volver al panel", whatYouWatch: "Lo que desea ver", whatYouWatchSub: "Elija lo que aparece en su panel. Solo verá lo que ellos también decidan compartir.", watchCheckinsSub: "Estado del registro, ánimo y la vista de 7 días", watchMedsSub: "Si tomaron sus medicamentos", activityChats: "Actividad y conversaciones", watchActivitySub: "Actividad y conversaciones recientes", famAlertNote: "Si no se registran, recibirá un aviso por mensaje de texto. Terminaremos de configurarlo juntos.",
+    familyDashTitle: "Panel de la familia", doneWord: "Hecho", weeklyTitle: "Resumen semanal", generateWord: "Generar", weeklyPlaceholder: "Toque Generar para crear un resumen de cómo ha estado su ser querido esta semana.", backToHarmony: "← Volver a Harmony", familyAccessTitle: "Acceso para la familia", familyAccessSub: "Para familiares de confianza", viewDashTitle: "Ver el panel de bienestar", viewDashSub: "Vea los registros, los medicamentos, los ánimos y un resumen semanal.", openDashBtn: "Abrir el panel", familyPinNote: "En la versión final esto se protege con un PIN familiar.",
     settings: "Ajustes", rowVoice: "Voz y claves de API", rowMeds: "Medicamentos", rowContacts: "Contactos de confianza", rowCheckinTime: "Hora del registro diario", rowSwitchRole: "Cambiar de perfil (mayor o familiar)",
     whatYouShare: "Lo que comparte con la familia", whatYouShareSub: "La familia solo ve lo que usted activa aquí. Puede cambiarlo cuando quiera.", shareCheckinsSub: "Si se registró, y su ánimo", shareMedsSub: "Qué medicamentos ha tomado", shareActivitySub: "Cuando conversa con Harmony",
     resetAll: "Borrar todos los datos", resetConfirm: "¿Borrar Harmony? Esto elimina TODOS los datos.",
@@ -1093,18 +1095,18 @@ export default function Harmony() {
       {/* FAMILY TAB */}
       {tab === "family" && (
         familyUnlocked ? (
-          <Page title="Family Dashboard" sub={`How ${profile?.preferredName || profile?.name || "your loved one"} is doing`}>
+          <Page title={t.familyDashTitle} sub={ui === "es" ? `Cómo está ${profile?.preferredName || profile?.name || "su ser querido"}` : `How ${profile?.preferredName || profile?.name || "your loved one"} is doing`}>
             {/* Today status */}
             <div style={{ ...card, marginBottom: 14 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>Today</p>
-              <Row label="Daily check-in" value={checkedInToday ? `✓ ${checkins.filter(c => new Date(c.ts).toISOString().slice(0,10)===todayKey()).slice(-1)[0]?.mood || "Done"}` : "Not yet"} good={checkedInToday} />
-              <Row label="Medications" value={meds.length ? `${meds.filter(m => medTakenToday(m.id)).length}/${meds.length} taken` : "None set"} good={meds.length > 0 && meds.every(m => medTakenToday(m.id))} />
-              <Row label="Talked to Harmony" value={activity.some(a => a.type === "mood" && new Date(a.ts).toISOString().slice(0,10)===todayKey()) ? "Yes ✓" : "Not yet"} good={activity.some(a => (a.type==="mood"||a.type==="checkin") && new Date(a.ts).toISOString().slice(0,10)===todayKey())} last />
+              <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>{t.todayTitle}</p>
+              <Row label={t.dailyCheckin} value={checkedInToday ? `✓ ${moodLabel(checkins.filter(c => new Date(c.ts).toISOString().slice(0,10)===todayKey()).slice(-1)[0]?.mood) || t.doneWord}` : t.notYet} good={checkedInToday} />
+              <Row label={t.meds} value={meds.length ? `${meds.filter(m => medTakenToday(m.id)).length}/${meds.length} ${t.takenOf}` : t.noneSet} good={meds.length > 0 && meds.every(m => medTakenToday(m.id))} />
+              <Row label={t.talkedToHarmony} value={activity.some(a => a.type === "mood" && new Date(a.ts).toISOString().slice(0,10)===todayKey()) ? `${t.yesWord} ✓` : t.notYet} good={activity.some(a => (a.type==="mood"||a.type==="checkin") && new Date(a.ts).toISOString().slice(0,10)===todayKey())} last />
             </div>
 
             {/* 7-day check-in calendar */}
             <div style={{ ...card, marginBottom: 14 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>Last 7 days</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>{t.last7days}</p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 {[6,5,4,3,2,1,0].map(d => {
                   const date = new Date(); date.setDate(date.getDate() - d);
@@ -1123,15 +1125,15 @@ export default function Harmony() {
             {/* Weekly AI summary */}
             <div style={{ ...card, marginBottom: 14 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em" }}>Weekly summary</p>
-                <button onClick={genWeeklySummary} style={{ fontSize: 13, color: C.teal, background: "none", border: "none", cursor: "pointer", fontWeight: 500 }}>↻ Generate</button>
+                <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em" }}>{t.weeklyTitle}</p>
+                <button onClick={genWeeklySummary} style={{ fontSize: 13, color: C.teal, background: "none", border: "none", cursor: "pointer", fontWeight: 500 }}>↻ {t.generateWord}</button>
               </div>
-              <p style={{ fontSize: 15, lineHeight: 1.6, color: weeklySummary ? C.text : C.text2 }}>{weeklySummary || "Tap Generate to create an AI summary of how your loved one has been doing this week."}</p>
+              <p style={{ fontSize: 15, lineHeight: 1.6, color: weeklySummary ? C.text : C.text2 }}>{weeklySummary || t.weeklyPlaceholder}</p>
             </div>
 
             {/* Recent activity */}
             <div style={{ ...card, marginBottom: 14 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>Recent activity</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: C.text2, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>{t.recentActivity}</p>
               {activity.slice(-8).reverse().map((a, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0", borderTop: i ? `1px solid ${C.sep}` : "none" }}>
                   <span style={{ fontSize: 18 }}>{a.type === "checkin" ? "✓" : a.type === "medication" ? "💊" : a.type === "mood" ? "💬" : a.type === "alert" ? "⚠️" : "•"}</span>
@@ -1141,19 +1143,19 @@ export default function Harmony() {
                   </div>
                 </div>
               ))}
-              {activity.length === 0 && <p style={{ fontSize: 14, color: C.text2 }}>No activity yet</p>}
+              {activity.length === 0 && <p style={{ fontSize: 14, color: C.text2 }}>{t.noActivity}</p>}
             </div>
 
-            <button onClick={() => { setFamilyUnlocked(false); setTab("talk"); }} style={{ ...grayBtn, fontSize: 15 }}>← Back to Harmony</button>
+            <button onClick={() => { setFamilyUnlocked(false); setTab("talk"); }} style={{ ...grayBtn, fontSize: 15 }}>{t.backToHarmony}</button>
           </Page>
         ) : (
-          <Page title="Family Access" sub="For trusted family members">
+          <Page title={t.familyAccessTitle} sub={t.familyAccessSub}>
             <div style={{ ...card, textAlign: "center", padding: 28 }}>
               <div style={{ fontSize: 44, marginBottom: 12 }}>👨‍👩‍👧</div>
-              <p style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>View wellbeing dashboard</p>
-              <p style={{ fontSize: 14, color: C.text2, marginBottom: 20, lineHeight: 1.5 }}>See check-ins, medications, mood trends, and a weekly summary.</p>
-              <button onClick={() => setFamilyUnlocked(true)} style={{ ...bigBtn }}>Open Dashboard</button>
-              <p style={{ fontSize: 12, color: C.text3, marginTop: 14 }}>In production this is protected by a family PIN.</p>
+              <p style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>{t.viewDashTitle}</p>
+              <p style={{ fontSize: 14, color: C.text2, marginBottom: 20, lineHeight: 1.5 }}>{t.viewDashSub}</p>
+              <button onClick={() => setFamilyUnlocked(true)} style={{ ...bigBtn }}>{t.openDashBtn}</button>
+              <p style={{ fontSize: 12, color: C.text3, marginTop: 14 }}>{t.familyPinNote}</p>
             </div>
           </Page>
         )
@@ -1459,6 +1461,10 @@ function Modal({ title, children, onClose }) {
     </div>
   );
 }
+
+const selStyle = { flex: 1, padding: 14, borderRadius: 12, border: `1px solid var(--sep)`, background: "var(--bg)", color: "var(--text)", fontSize: 16, cursor: "pointer" };
+
+const EL_VOICES_REF = EL_VOICES; // keep reference
 
 const selStyle = { flex: 1, padding: 14, borderRadius: 12, border: `1px solid var(--sep)`, background: "var(--bg)", color: "var(--text)", fontSize: 16, cursor: "pointer" };
 
